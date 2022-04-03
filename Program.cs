@@ -34,6 +34,9 @@ namespace BlogsConsole
                         {
                             Console.WriteLine(item.Name);
                         }
+
+
+
                     }else if (choice == "2"){
                         // Create and save a new Blog
                         Console.Write("Enter a name for a new Blog: ");
@@ -42,9 +45,49 @@ namespace BlogsConsole
                         db = new BloggingContext();
                         db.AddBlog(blog);
                         logger.Info("Blog added - {name}", name);
+
+
+
                     }else if (choice == "3"){
+                        string select = "";
+                        int i = 0;
+                        Console.WriteLine("What blog do you want to post to?");
+                        select = Console.ReadLine();
+                        var query = db.Blogs;
+                        foreach(var blog in query){
+                            if(blog.Name == select){
+                                i++;
+                            }
+                        }
+                        if(i >=1){
+                            foreach(var blog in query){
+                            if(blog.Name == select){
+                                Console.Write("Enter post name: ");
+                                var postName = Console.ReadLine();
+                                Console.WriteLine("Enter post content");
+                                var postContent = Console.ReadLine();
+                                int tempBlogID = blog.BlogId;
+                                var post = new Post{Title = postName,
+                                                    Content = postContent,
+                                                    BlogId = tempBlogID};
+                                db = new BloggingContext();
+                                db.AddPost(post);
+                                logger.Info("Post added - {title}", postName);
+                                }    
+                            }
+                        }else if (i == 0){
+                            logger.Info("Invalid name.");
+                        }
+                        
+                        
+                        
+
+
 
                     }else if (choice == "4"){
+
+
+
 
                     }
                 }while (choice =="1" || choice =="2" || choice =="3" || choice =="4");
