@@ -35,18 +35,17 @@ namespace BlogsConsole
                             Console.WriteLine(item.Name);
                         }
 
-
-
                     }else if (choice == "2"){
                         // Create and save a new Blog
                         Console.Write("Enter a name for a new Blog: ");
                         var name = Console.ReadLine();
-                        var blog = new Blog { Name = name };
-                        db = new BloggingContext();
-                        db.AddBlog(blog);
-                        logger.Info("Blog added - {name}", name);
-
-
+                        if (name != null){
+                            var blog = new Blog { Name = name };
+                            db = new BloggingContext();
+                            db.AddBlog(blog);
+                            logger.Info("Blog added - {name}", name);
+                        }
+                        
 
                     }else if (choice == "3"){
                         string select = "";
@@ -80,19 +79,30 @@ namespace BlogsConsole
                         }
                         
                         
-                        
-
-
-
                     }else if (choice == "4"){
-
-
-
-
+                        int i = 0;
+                        int id = 0;
+                        Console.WriteLine("What blog do you want to go to?");
+                        string choice2 = Console.ReadLine();
+                        var query = db.Blogs;
+                        foreach(var item in query){
+                            if(item.Name == choice2){
+                                id = item.BlogId;
+                                var query2 = db.Posts;
+                                foreach(var post in query2){
+                                if(post.BlogId == id){
+                                    i++;
+                                    Console.WriteLine("Blog: "+item.Name +"\nPost Name: "+post.Title+"\nPost Content: "+post.Content);
+                                    Console.WriteLine("");
+                            }
+                        }
+                            }
+                        }
+                        Console.WriteLine($"Nmber of posts: {i}");
                     }
                 }while (choice =="1" || choice =="2" || choice =="3" || choice =="4");
                 
-            }
+                }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
