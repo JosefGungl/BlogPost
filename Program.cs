@@ -50,20 +50,28 @@ namespace BlogsConsole
                     }else if (choice == "3"){
                         string select = "";
                         int i = 0;
-                        Console.WriteLine("What blog do you want to post to?");
+                        //Display available blogs
+                        var query = db.Blogs.OrderBy(b => b.Name);
+                        Console.WriteLine("Available blogs:");
+                        foreach (var item in query)
+                        {
+                            Console.WriteLine(item.Name);
+                        }
+
+                        Console.Write("What blog do you want to post to: ");
                         select = Console.ReadLine();
-                        var query = db.Blogs;
-                        foreach(var blog in query){
+                        var query2 = db.Blogs;
+                        foreach(var blog in query2){
                             if(blog.Name == select){
                                 i++;
                             }
                         }
                         if(i >=1){
-                            foreach(var blog in query){
+                            foreach(var blog in query2){
                             if(blog.Name == select){
                                 Console.Write("Enter post name: ");
                                 var postName = Console.ReadLine();
-                                Console.WriteLine("Enter post content");
+                                Console.Write("Enter post content: ");
                                 var postContent = Console.ReadLine();
                                 int tempBlogID = blog.BlogId;
                                 var post = new Post{Title = postName,
@@ -82,31 +90,42 @@ namespace BlogsConsole
                     }else if (choice == "4"){
                         int i = 0;
                         int id = 0;
-                        Console.WriteLine("What blog do you want to go to?");
+                        //display available blogs
+                        Console.WriteLine("Available blogs:");
+                        var query = db.Blogs.OrderBy(b => b.Name);
+                        foreach (var item in query)
+                        {
+                            Console.WriteLine(item.Name);
+                        }
+                        //select a blog
+                        Console.Write("Enter the name of the blog you would like to go to: ");
                         string choice2 = Console.ReadLine();
-                        var query = db.Blogs;
-                        foreach(var item in query){
-                            if(item.Name == choice2){
+                        var query2 = db.Blogs;
+                        foreach(var item in query2){
+                            if(item.Name == choice2)
+                            {
                                 id = item.BlogId;
-                                var query2 = db.Posts;
-                                foreach(var post in query2){
-                                if(post.BlogId == id){
-                                    i++;
-                                    Console.WriteLine("Blog: "+item.Name +"\nPost Name: "+post.Title+"\nPost Content: "+post.Content);
-                                    Console.WriteLine("");
-                            }
-                        }
-                            }
-                        }
-                        Console.WriteLine($"Nmber of posts: {i}");
+                                var query3 = db.Posts;
+                                foreach(var post in query3)
+                                {
+                                    if(post.BlogId == id)
+                                    {
+                                        i++;
+                                        Console.WriteLine("Blog: "+item.Name +"\nPost Name: "+post.Title+"\nPost Content: "+post.Content);
+                                        Console.WriteLine("");
+                                    }
+                                }
+                            }   
                     }
-                }while (choice =="1" || choice =="2" || choice =="3" || choice =="4");
-                
+                    Console.WriteLine($"Nmber of posts: {i}");
                 }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-            }
+            }while (choice =="1" || choice =="2" || choice =="3" || choice =="4");
+                
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex.Message);
+        }
 
             logger.Info("Program ended");
         }
